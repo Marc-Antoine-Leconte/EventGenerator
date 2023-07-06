@@ -1,112 +1,160 @@
+"use client"
 import Image from 'next/image'
+import { useState, useEffect } from 'react';
+
+enum Action {
+  null,
+  fillEventDeck,
+  getNextEvent,
+}
+
+type Event = {
+  name: string;
+  description: string;
+  action1: string;
+  action2: string;
+  action3: string;
+}
+
+const events = [
+  //{name : "", description : "", action1 : "", action2 : "", action3 : ""},
+  { name: "La pluie", description: "La pluie tombe drue, ce n'est pas possible d'avancer avec ce temps, sauf si vous avez un chapeau", action1: "Voler le chapeau d'un autre joueur et avancer d'une case (-1 SALUT)", action2: "Consommer un chapeau et avancer d'une case", action3: "Ne rien faire" },
+  { name: "Les bandits", description: "Une embuscade, vous devez fuir pour sauver votre vie, ou laisser le temps aux autres de s'enfuir", action1: "Fuir (rien ne se passe)", action2: "Rester (vous perdez 2 objets mais +1 SALUT)" },
+  { name: "l'orphelin", description: "Un jeune garcon s'approche de vous, il a faim", action1: "Forcer son voisin à donner à manger (-1 SALUT)", action2: "Lui donner de la nourriture (+1 SALUT)", action3: "Ne rien faire" },
+  { name: "Le froid", description: "Par ce temps il n'est pas possible d'avancer sans être bien couvert", action1: "Vous regardez dans la pioche équipement jusqu'à ce que vous piochiez un vêtement (-1 SALUT par carte regardée)", action2: "Consommer un vêtement", action3: "Ne rien faire" },
+];
+
 
 export default function Home() {
+  const [gameIsOn, setGameIsOn] = useState<boolean>(false);
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [remainingEvents, setRemainingEvents] = useState<number[]>([]);
+  const [discardedEvents, setDiscardedEvents] = useState<number[]>([]);
+  const [action, setAction] = useState<Action>(Action.null);
+
+  // Fill the event deck
+  function fillEventDeck() {
+    console.log('fill event deck', Object.keys(Array.apply(0, Array(events.length))));
+    setRemainingEvents(Object.keys(Array.apply(0, Array(events.length))));
+    setDiscardedEvents([]);
+  }
+
+  // Get the next event card that will be displayed
+  function getNextEvent() {
+    console.log('get next event');
+    var randomId = Math.floor(Math.random() * remainingEvents.length);
+    var nextEventId = remainingEvents.at(randomId);
+
+    setDiscardedEvents([...discardedEvents, nextEventId]);
+    setRemainingEvents(remainingEvents.filter(value => value != nextEventId));
+    setSelectedEventId(nextEventId);
+  };
+
+  // Update the selected Event when the selectedId is changed
+  useEffect(() => {
+    if (selectedEventId === null) {
+      setSelectedEvent(null);
+      return;
+    }
+
+    if (selectedEventId < 0 || selectedEventId > events.length) {
+      console.error('Value is out of range : ' + { selectedEventId } + " is not bewteen 0 and " + events.length);
+      setSelectedEventId(null);
+      return;
+    }
+
+    setSelectedEvent(events.at(selectedEventId));
+  }, [selectedEventId]);
+
+  useEffect(() => {
+    if (gameIsOn === true) {
+      setAction(Action.fillEventDeck);
+      return;
+    }
+
+    setSelectedEventId(null);
+    setDiscardedEvents([]);
+    setRemainingEvents([]);
+  }, [gameIsOn]);
+
+  // Actions handler
+  useEffect(() => {
+    console.log("##", action)
+    if (action === Action.null) {
+      return;
+    }
+    if (action === Action.fillEventDeck) {
+      fillEventDeck();
+      setAction(Action.getNextEvent);
+    }
+    if (action === Action.getNextEvent) {
+      if (remainingEvents.length <= 0) {
+        setSelectedEventId(null);
+        if (!confirm("Le paquet de carte est épuisé, souhaitez vous remélanger le packet ?")) {
+          setGameIsOn(false);
+        } else {
+          setAction(Action.fillEventDeck);
+        }
+      } else {
+        getNextEvent();
+        setAction(Action.null);
+      }
+    }
+  }, [action]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="test flex min-h-screen flex-col items-center p-24">
+      <div className="">
+        {gameIsOn ? (
+          <button onClick={() => setAction(Action.getNextEvent)}>
+            Evènement suivant
+          </button>
+        ) : (
+          <button onClick={() => setGameIsOn(true)}>
+            Commencer une partie
+          </button>
+        )}
+      </div>
+      <div>
+        <div className='event-generator fix place-items-center'>
+          <div className='card'>
+            {selectedEventId === null && (
+              <div className='card-content'>
+                <div className='card-description'>
+                  Vide
+                </div>
+              </div>)}
+            {selectedEvent !== null && (
+              <div className='card-content'>
+                <div className='card-title'>
+                  {selectedEvent.title}
+                </div>
+                <div className='card-description'>
+                  <div className='card-description-text'>
+                    {selectedEvent.description}
+                  </div>
+                </div>
+                <div className='card-action-list'>
+                  <div className='card-action-item'>
+                    <div className='card-action-text'>
+                      {selectedEvent.action1}
+                    </div>
+                  </div>
+                  <div className='card-action-item'>
+                    <div className='card-action-text'>
+                      {selectedEvent.action2}
+                    </div>
+                  </div>
+                  <div className={"card-action-item"}>
+                    <div className='card-action-text'>
+                      {selectedEvent.action3}
+                    </div>
+                  </div>
+                </div>
+              </div>)}
+          </div>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
       </div>
     </main>
   )
