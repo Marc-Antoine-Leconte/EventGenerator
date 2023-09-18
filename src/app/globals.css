@@ -83,3 +83,14 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.buttons-container {
+}
+
+.buttons-container button {
+  padding: 5px;
+  margin: 5px;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 15%;
+}
