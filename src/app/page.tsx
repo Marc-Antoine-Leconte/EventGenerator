@@ -5,7 +5,7 @@ import GetGoogleSheet from './helper/googleSheetApi';
 
 enum Action {
   null,
-  fillEventDeck,
+  initEventDeck,
   getNextEvent,
 }
 
@@ -38,20 +38,18 @@ export default function Home() {
   const [events, setEvents] = useState<any[]>([])
 
   // Fill the event deck
-  function fillEventDeck() {
-    console.log('fill event deck', events);
+  function initEventDeck() {
+    console.log('## INIT EVENT DECK', events);
     var newEventDeck : number[] = [];
 
     events.forEach((value, index) => {
       var quantity = value.quantity ?? 1;
-      console.log('quantity', value.quantity);
-      newEventDeck = newEventDeck.concat(new Array<number>(quantity).fill(index));
+      var quantityArray = Array.from({length: quantity}, () => index)
+
+      newEventDeck = newEventDeck.concat(quantityArray);
     })
 
-    console.log('newEventDeck => ',newEventDeck);
-
     setRemainingEvents(newEventDeck);
-    //setRemainingEvents(Object.keys(Array.apply(0, Array(events.length))));
     setDiscardedEvents([]);
   }
 
@@ -90,7 +88,7 @@ export default function Home() {
   // Launch the start of the game
   useEffect(() => {
     if (gameIsOn === true) {
-      setAction(Action.fillEventDeck);
+      setAction(Action.initEventDeck);
       return;
     }
 
@@ -105,10 +103,10 @@ export default function Home() {
       console.log("## ACTION IS NULL")
       return;
     }
-    if (action === Action.fillEventDeck) {
-      console.log("## fillEventDeck")
+    if (action === Action.initEventDeck) {
+      console.log("## initEventDeck")
       
-      fillEventDeck();
+      initEventDeck();
       setAction(Action.getNextEvent);
     }
     if (action === Action.getNextEvent) {
@@ -119,7 +117,7 @@ export default function Home() {
         if (!confirm("Le paquet de carte est épuisé, souhaitez vous remélanger le packet ?")) {
           setGameIsOn(false);
         } else {
-          setAction(Action.fillEventDeck);
+          setAction(Action.initEventDeck);
         }
       } else {
         getNextEvent();
@@ -135,6 +133,7 @@ export default function Home() {
 
   return (
     <main className="test flex min-h-screen flex-col items-center p-24">
+      <div id="app-version">v1.0</div>
       <div className="buttons-container">
         <button onClick={() => GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents))}>
             Import des cartes
