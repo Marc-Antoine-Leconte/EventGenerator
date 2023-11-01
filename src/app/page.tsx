@@ -6,7 +6,7 @@ import GetGoogleSheet from './helper/googleSheetApi';
 enum Action {
   null,
   initEventDeck,
-  getNextEvent,
+  pickNextEvent,
 }
 
 type Event = {
@@ -37,7 +37,10 @@ export default function Home() {
   const [action, setAction] = useState<Action>(Action.null);
   const [events, setEvents] = useState<any[]>([])
 
-  // Fill the event deck
+  // 
+  // Fill the event deck with the cards collected from the google sheet
+  // It will create a new deck with quantity * nb of card type
+  //
   function initEventDeck() {
     console.log('## INIT EVENT DECK', events);
     var newEventDeck : number[] = [];
@@ -53,8 +56,10 @@ export default function Home() {
     setDiscardedEvents([]);
   }
 
-  // Get the next event card that will be displayed
-  function getNextEvent() {
+  //
+  // Pick the next event card that will be displayed
+  //
+  function pickNextEvent() {
     console.log('get next event');
     var randomId = Math.floor(Math.random() * remainingEvents.length);
     var nextEventId : number = remainingEvents.at(randomId) ?? 0;
@@ -69,7 +74,9 @@ export default function Home() {
     setSelectedEventId(nextEventId);
   };
 
+  //
   // Update the selected Event when the selectedId is changed
+  //
   useEffect(() => {
     if (selectedEventId === null) {
       setSelectedEvent(null);
@@ -85,7 +92,9 @@ export default function Home() {
     setSelectedEvent(events.at(selectedEventId));
   }, [selectedEventId]);
 
+  //
   // Launch the start of the game
+  //
   useEffect(() => {
     if (gameIsOn === true) {
       setAction(Action.initEventDeck);
@@ -97,7 +106,9 @@ export default function Home() {
     setRemainingEvents([]);
   }, [gameIsOn]);
 
+  //
   // Actions handler
+  //
   useEffect(() => {
     if (action === Action.null) {
       console.log("## ACTION IS NULL")
@@ -107,10 +118,10 @@ export default function Home() {
       console.log("## initEventDeck")
       
       initEventDeck();
-      setAction(Action.getNextEvent);
+      setAction(Action.pickNextEvent);
     }
-    if (action === Action.getNextEvent) {
-      console.log("## getNextEvent")
+    if (action === Action.pickNextEvent) {
+      console.log("## pickNextEvent")
 
       if (remainingEvents.length <= 0) {
         setSelectedEventId(null);
@@ -120,26 +131,28 @@ export default function Home() {
           setAction(Action.initEventDeck);
         }
       } else {
-        getNextEvent();
+        pickNextEvent();
         setAction(Action.null);
       }
     }
   }, [action]);
 
+  //
   // Load the card from the google card API
+  //
   useEffect(() => {
     GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents));
   }, []);
 
   return (
-    <main className="test flex min-h-screen flex-col items-center p-24">
+    <main className="main-container flex min-h-screen flex-col items-center p-24">
       <div id="app-version">v1.0</div>
       <div className="buttons-container">
         <button onClick={() => GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents))}>
             Import des cartes
           </button>
         {gameIsOn ? (
-          <button onClick={() => setAction(Action.getNextEvent)}>
+          <button onClick={() => setAction(Action.pickNextEvent)}>
              Evènement suivant ({remainingEvents.length} cartes restantes)
           </button>
         ) : (
