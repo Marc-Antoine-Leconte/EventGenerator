@@ -1,13 +1,15 @@
 {
-  "name": "compostelle",
+  "name": "event-generator",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start-app": "next start",
     "lint": "next lint",
-    "server": "node server/server.js"
+    "server": "node server/server.js",
+    "start-dev": "start npm run server && start npm run dev",
+    "start": "start npm run server && start npm run start-app"
   },
   "dependencies": {
     "@types/node": "20.3.3",
