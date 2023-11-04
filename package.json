@@ -9,7 +9,7 @@
     "lint": "next lint",
     "server": "node server/server.js",
     "start-dev": "start npm run server && start npm run dev",
-    "start": "npm run server & npm run start-app"
+    "start": "npm run server && npm run start-app"
   },
   "dependencies": {
     "@types/node": "20.3.3",
