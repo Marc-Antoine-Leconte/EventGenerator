@@ -13,7 +13,7 @@ app.use(cors())
 
 var googleSheetAPI = require('./googleSheetApi.js');
 
-// listening for port 5000
+// listening for port of heroku, or 5000 by default
 app.listen(PORT, ()=> console.log(`Server is running on ${PORT}` ))
 
 // API request
