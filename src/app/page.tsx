@@ -146,7 +146,7 @@ export default function Home() {
 
   return (
     <main className="main-container flex min-h-screen flex-col items-center p-24">
-      <div id="app-version">v1.0</div>
+      <div id="app-version">v1.1</div>
       <div className="buttons-container">
         <button onClick={() => GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents))}>
             Import des cartes

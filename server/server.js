@@ -1,5 +1,6 @@
 // defining the server port
 const port = 5000
+const PORT = process.env.PORT || port
 
 // initializing installed dependencies
 const express = require('express')
@@ -13,7 +14,7 @@ app.use(cors())
 var googleSheetAPI = require('./googleSheetApi.js');
 
 // listening for port 5000
-app.listen(port, ()=> console.log(`Server is running on ${port}` ))
+app.listen(PORT, ()=> console.log(`Server is running on ${PORT}` ))
 
 // API request
 app.get('/', (req,res)=>{    
