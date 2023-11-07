@@ -1,5 +1,4 @@
-import GSheetReader from 'g-sheets-api';
-import dotenv from 'dotenv';
+const GSheetReader = require("g-sheets-api");
 
 const myGoogleSheetUrl = process.env.GOOGLE_SHEET_URL;
 const myGoogleSheetUrlInTheWeb = process.env.GOOGLE_SHEET_URL_IN_WEB;
@@ -20,7 +19,7 @@ const options = {
   //}
 }
 
-export function GetGoogleSheet(onSuccess, onError) {
+function GetGoogleSheet(onSuccess, onError) {
   GSheetReader(
     options,
     results => {

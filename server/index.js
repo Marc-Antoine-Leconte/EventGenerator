@@ -3,11 +3,12 @@ const DEFAULT_PORT = 5000
 
 // initializing installed dependencies
 const express = require('express')
-require('dotenv').config()
-const axios = require('axios')
+const path = require('path');
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
 const app = express()
 const cors = require('cors')
-const dotenv = require('dotenv');
 app.use(cors())
 
 var googleSheetAPI = require('./googleSheetApi.js');
