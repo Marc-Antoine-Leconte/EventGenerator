@@ -1,5 +1,4 @@
 "use client"
-import Image from 'next/image'
 import { useState, useEffect } from 'react';
 import GetGoogleSheet from './helper/googleSheetApi';
 
@@ -43,11 +42,11 @@ export default function Home() {
   //
   function initEventDeck() {
     console.log('## INIT EVENT DECK', events);
-    var newEventDeck : number[] = [];
+    var newEventDeck: number[] = [];
 
-    events.forEach((value, index) => {
+    events.forEach((value: any, index: number) => {
       var quantity = value.quantity ?? 1;
-      var quantityArray = Array.from({length: quantity}, () => index)
+      var quantityArray = Array.from({ length: quantity }, () => index)
 
       newEventDeck = newEventDeck.concat(quantityArray);
     })
@@ -62,7 +61,7 @@ export default function Home() {
   function pickNextEvent() {
     console.log('get next event');
     var randomId = Math.floor(Math.random() * remainingEvents.length);
-    var nextEventId : number = remainingEvents.at(randomId) ?? 0;
+    var nextEventId: number = remainingEvents.at(randomId) ?? 0;
 
     console.log('random id => ', randomId);
     console.log('new discarded events => ', [...discardedEvents, nextEventId]);
@@ -116,7 +115,7 @@ export default function Home() {
     }
     if (action === Action.initEventDeck) {
       console.log("## initEventDeck")
-      
+
       initEventDeck();
       setAction(Action.pickNextEvent);
     }
@@ -149,15 +148,15 @@ export default function Home() {
       <div id="app-version">v1.1</div>
       <div className="buttons-container">
         <button onClick={() => GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents))}>
-            Import des cartes
-          </button>
+          Import des cartes
+        </button>
         {gameIsOn ? (
           <button onClick={() => setAction(Action.pickNextEvent)}>
-             Evènement suivant ({remainingEvents.length} cartes restantes)
+            Evènement suivant ({remainingEvents.length} cartes restantes)
           </button>
         ) : (
           <button onClick={() => setGameIsOn(true)}>
-             Commencer une partie
+            Commencer une partie
           </button>
         )}
       </div>

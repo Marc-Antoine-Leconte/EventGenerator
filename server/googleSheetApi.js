@@ -1,5 +1,5 @@
-const GSheetReader = require('g-sheets-api');
-const dotenv = require('dotenv');
+import GSheetReader from 'g-sheets-api';
+import dotenv from 'dotenv';
 
 const myGoogleSheetUrl = process.env.GOOGLE_SHEET_URL;
 const myGoogleSheetUrlInTheWeb = process.env.GOOGLE_SHEET_URL_IN_WEB;
@@ -20,21 +20,19 @@ const options = {
   //}
 }
 
-module.exports = {
-  GetGoogleSheet : function (onSuccess, onError) {
-    GSheetReader(
-      options,
-      results => {
-        console.log('Results => ', results)
-        onSuccess(results);
-      },
-      error => {
-        console.log('There was an error (optional) => ', error)
-        onError();
-        // OPTIONAL: handle errors here
-      }).catch((err) => {
-        console.log('There was an error (catch) => ', err)
-        // do something with the error message here
-      });
-  }
+export function GetGoogleSheet(onSuccess, onError) {
+  GSheetReader(
+    options,
+    results => {
+      console.log('Results => ', results);
+      onSuccess(results);
+    },
+    error => {
+      console.log('There was an error (optional) => ', error);
+      onError();
+      // OPTIONAL: handle errors here
+    }).catch((err) => {
+      console.log('There was an error (catch) => ', err);
+      // do something with the error message here
+    });
 }
