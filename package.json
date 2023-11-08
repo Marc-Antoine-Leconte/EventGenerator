@@ -1,25 +1,31 @@
 {
-    "name": "event-generator",
-    "version": "2.0.0",
-    "description": "Event generator for Raphaelis association",
-    "scripts": {
-        "start": "node server",
-        "build": "cd react-ui/ && npm install && npm run build"
-    },
-    "cacheDirectories": [
-        "node_modules",
-        "react-ui/node_modules"
-    ],
-    "dependencies": {
-        "cors": "^2.8.5",
-        "dotenv": "^16.3.1",
-        "express": "^4.16.4",
-        "g-sheets-api": "^2.2.0"
-    },
-    "keywords": [
-        "node",
-        "heroku",
-        "create-react-app",
-        "react"
-    ]
+  "name": "heroku-cra-node",
+  "version": "3.0.0",
+  "description": "How to use create-react-app with a custom Node API on Heroku",
+  "engines": {
+    "node": "10.x"
+  },
+  "scripts": {
+    "start": "node server",
+    "build": "cd react-ui/ && npm install && npm run build"
+  },
+  "cacheDirectories": [
+    "node_modules",
+    "react-ui/node_modules"
+  ],
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mars/heroku-cra-node.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "create-react-app",
+    "react"
+  ],
+  "license": "MIT",
+  "devDependencies": {}
 }
