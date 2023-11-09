@@ -14,10 +14,12 @@
         "react-ui/node_modules"
     ],
     "dependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
         "express": "^4.16.4",
         "g-sheets-api": "^2.2.0"
+    },
+    "devDependencies": {
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
     }
 }
