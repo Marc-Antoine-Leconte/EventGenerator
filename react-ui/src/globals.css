@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'Magnific Chaos';
-  src:local('Magnific Chaos'), url(../fonts/Magnific-Chaos.ttf) format('truetype');
+  src:local('Magnific Chaos'), url(./fonts/Magnific-Chaos.ttf) format('truetype');
 }
 
 body {
