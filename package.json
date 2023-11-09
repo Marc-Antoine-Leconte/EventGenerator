@@ -2,9 +2,6 @@
     "name": "event-generator",
     "version": "2.0.0",
     "description": "Event generator for Raphaelis association",
-    "engines": {
-        "node": "10.x"
-    },
     "scripts": {
         "start": "node server",
         "build": "cd react-ui/ && npm install && npm run build"
