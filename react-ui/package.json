@@ -1,6 +1,6 @@
 {
-  "name": "event-generator",
-  "version": "0.1.0",
+  "name": "event-generator-client",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@types/node": "20.3.3",
