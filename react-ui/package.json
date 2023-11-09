@@ -36,5 +36,8 @@
   "overrides": {
     "typescript": "^5.1.6"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
 }
