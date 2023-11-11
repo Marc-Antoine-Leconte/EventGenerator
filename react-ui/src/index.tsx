@@ -1,5 +1,7 @@
+import ReactDOM from 'react-dom'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import Home from './page'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,3 +22,5 @@ export default function RootLayout({
     </html>
   )
 }
+
+ReactDOM.render(<Home />, document.getElementById('root'));
