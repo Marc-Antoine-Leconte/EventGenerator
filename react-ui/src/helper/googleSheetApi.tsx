@@ -3,7 +3,7 @@ import axios from "axios";
 export default function GetGoogleSheet(onSuccess : (result : any[]) => void, onError: (result : any) => void) {
     const options = {
         method: 'GET',
-        url: '/api'
+        url: '/'
         //url: "http://localhost:5000",
       }
       axios.request(options)
