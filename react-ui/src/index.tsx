@@ -1,7 +1,7 @@
-import ReactDOM from 'react-dom'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Home from './page'
+import { createRoot } from 'react-dom/client'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,4 +23,6 @@ export default function RootLayout({
   )
 }
 
-ReactDOM.render(<Home />, document.getElementById('root'));
+const container = document.getElementById('app');
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+root.render(<Home />);
