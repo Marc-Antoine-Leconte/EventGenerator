@@ -34,7 +34,7 @@ if (!isDev && cluster.isMaster) {
     app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
     // API request
-    app.get('/', (req,res)=>{    
+    app.get('/data', (req,res)=>{    
     
         googleSheetAPI.GetGoogleSheet(function (response) {
             console.log('SUCCESS -> ', response);
