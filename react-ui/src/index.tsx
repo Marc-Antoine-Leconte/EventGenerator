@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import Home from './page'
 import { createRoot } from 'react-dom/client'
 
+console.log('loading app 0');
+
 const inter = Inter({ subsets: ['latin'] })
 
 console.log('loading app 1');
