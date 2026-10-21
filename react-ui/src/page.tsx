@@ -35,6 +35,7 @@ export default function Home() {
   const [discardedEvents, setDiscardedEvents] = useState<number[]>([]);
   const [action, setAction] = useState<Action>(Action.null);
   const [events, setEvents] = useState<any[]>([])
+  const [sheetName, setSheetName] = useState<string | null>(null)
 
   // 
   // Fill the event deck with the cards collected from the google sheet
@@ -124,7 +125,7 @@ export default function Home() {
 
       if (remainingEvents.length <= 0) {
         setSelectedEventId(null);
-        if (!confirm("Le paquet de carte est épuisé, souhaitez vous remélanger le packet ?")) {
+        if (!confirm("Le paquet de carte est épuisé, souhaitez vous remélanger le paquet ?")) {
           setGameIsOn(false);
         } else {
           setAction(Action.initEventDeck);
@@ -140,14 +141,14 @@ export default function Home() {
   // Load the card from the google card API
   //
   useEffect(() => {
-    GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents));
+    GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents), sheetName ?? "0");
   }, []);
 
   return (
     <main className="main-container flex min-h-screen flex-col items-center p-24">
       <div id="app-version">v1.1</div>
       <div className="buttons-container">
-        <button onClick={() => GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents))}>
+        <button onClick={() => GetGoogleSheet((results: any[]) => setEvents(results), () => setEvents(defaultEvents), sheetName ?? "0")}>
           Import des cartes
         </button>
         {gameIsOn ? (
@@ -159,6 +160,7 @@ export default function Home() {
             Commencer une partie
           </button>
         )}
+        <input value={sheetName || ""} onChange={e => setSheetName(e.target.value)}></input>
       </div>
       <div>
         <div className='event-generator fix place-items-center'>
