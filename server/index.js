@@ -31,7 +31,7 @@ if (!isDev && cluster.isMaster) {
 
 } else {
     // Priority serve any static files.
-    app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
+    app.use(express.static(path.resolve(process.cwd(), '../react-ui/build')));
 
     // API request
     app.get('/data', (req,res)=>{    
@@ -41,12 +41,12 @@ if (!isDev && cluster.isMaster) {
             res.json(response);
         }, function (error) {
             console.error(error);
-        });
+        }, req.query.sheetId, req.query.sheetName);
     });
 
     // All remaining requests return the React app, so it can handle routing.
     app.get('*', function(request, response) {
-        response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
+        response.sendFile(path.resolve(process.cwd(), '../react-ui/build', 'index.html'));
     });
 
     app.listen(PORT, function () {

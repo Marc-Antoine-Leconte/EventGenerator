@@ -1,10 +1,10 @@
 const GSheetReader = require("g-sheets-api");
-const dotenv = require("dotenv");
+const dotenv = require("dotenv").config();
 
 const myGoogleSheetUrl = process.env.GOOGLE_SHEET_URL;
 const myGoogleSheetUrlInTheWeb = process.env.GOOGLE_SHEET_URL_IN_WEB;
 
-const options = {
+let options = {
   apiKey: process.env.API_KEY,
   sheetId: process.env.SHEET_ID,
   sheetNumber: 1,
@@ -20,7 +20,15 @@ const options = {
   //}
 }
 
-function GetGoogleSheet(onSuccess, onError) {
+function GetGoogleSheet(onSuccess, onError, sheetId=null, sheetName=null) {
+
+  if (sheetId != null) {
+    options.sheetNumber = sheetId;
+  }
+  if (sheetName != null && sheetName != "") {
+    options.sheetName = sheetName;
+  }
+
   GSheetReader(
     options,
     results => {
